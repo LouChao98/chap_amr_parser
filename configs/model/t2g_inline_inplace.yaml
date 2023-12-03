@@ -1,0 +1,41 @@
+_target_: src.models.t2g_model.Text2GraphLitModule
+_recursive_: false
+
+net:
+  _target_: src.models.core.t2g_inline.Text2GraphInline
+  model_name: bart_inplace
+  path_to_pretrained: ${data.tokenizer_path}
+  tg_heads: [0, 1, 2, 3]
+  tg_layers: [11, 10]
+
+optimizer:
+  groups:
+    - pattern: .*(bias|layernorm|shared|embed).*
+      weight_decay: 0
+  args:
+    _target_: torch.optim.AdamW
+    lr: 3.0e-5
+    betas: [0.9, 0.999]
+    weight_decay: 0.004
+
+scheduler:
+  interval: step
+  frequency: 1
+  monitor: val/loss
+  args:
+    _target_: src.utils.scheduler.get_cosine_schedule_with_warmup
+    num_warmup_steps: ${eval:${trainer.max_steps} * 0.1}
+    num_training_steps: 10000
+
+val_metric:
+  _target_: src.utils.metric.SmatchMetric
+
+test_metric:
+  _target_: src.utils.metric.SmatchMetric
+
+save_prediction_dir: ${paths.output_dir}
+
+test_gen_args:
+  num_beams: 4
+
+load_from_checkpoint: ~

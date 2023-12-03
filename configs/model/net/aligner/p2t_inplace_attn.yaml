@@ -1,0 +1,4 @@
+type: inplace_attn
+method: mean
+bart_layers: -1
+bart_heads: 4

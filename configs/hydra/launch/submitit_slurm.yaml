@@ -1,0 +1,27 @@
+# @package hydra.launcher
+submitit_folder: ${hydra.sweep.dir}/.submitit/%j
+timeout_min: 60
+cpus_per_task: 8
+gpus_per_node: 1
+tasks_per_node: 1
+mem_gb: 32
+nodes: 1
+name: qtg
+_target_: hydra_plugins.hydra_submitit_launcher.submitit_launcher.SlurmLauncher
+partition: critical
+qos: null
+comment: null
+constraint: null
+exclude: ai_gpu34
+gres: gpu:NVIDIATITANRTX:1
+cpus_per_gpu: null
+gpus_per_task: null
+mem_per_gpu: null
+mem_per_cpu: null
+account: null
+signal_delay_s: 120
+max_num_timeout: 0
+additional_parameters: {}
+array_parallelism: 256
+setup: null
+srun_args: null

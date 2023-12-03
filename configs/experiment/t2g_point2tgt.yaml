@@ -1,0 +1,25 @@
+# @package _global_
+
+defaults:
+  - override /data: amr3
+  - override /model: t2g_point2tgt
+  - override /callbacks: default
+  - override /trainer: gpu
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+task_name: amr3
+tags: ["normal"]
+
+seed: 12345
+
+data:
+  feat_name: amrtoken-dvar
+  var_format: target-side-pointer # or target-side-pointer2
+
+logger:
+  wandb:
+    project: amr
+    name: p2t
+    tags: ${tags}

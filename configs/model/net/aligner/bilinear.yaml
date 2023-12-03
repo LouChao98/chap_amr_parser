@@ -1,0 +1,3 @@
+type: bilinear
+hidden_size: 64
+bart_layers: 1

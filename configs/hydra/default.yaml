@@ -1,0 +1,12 @@
+# https://hydra.cc/docs/configure_hydra/intro/
+
+defaults:
+  - override hydra_logging: rich
+  - override job_logging: rich
+
+# output directory, generated dynamically on each run
+run:
+  dir: ${paths.log_dir}/${task_name}/runs/${if:${in_cluster:},${slurm_job_id:},${now:%Y-%m-%d}_${now:%H-%M-%S}}
+sweep:
+  dir: ${paths.log_dir}/${task_name}/multiruns/${if:${in_cluster:},${slurm_job_id:},${now:%Y-%m-%d}_${now:%H-%M-%S}}
+  subdir: ${hydra.job.override_dirname}

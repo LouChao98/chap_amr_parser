@@ -1,0 +1,58 @@
+defaults:
+  - net/aligner: p2t_bilinear
+
+_target_: src.models.t2g_model.Text2GraphLitModule
+_recursive_: false
+
+net:
+  _target_: src.models.core.t2g_point2tgt_paware.Text2GraphPoint2TgtPAware
+  model_name: bart_paware
+  path_to_pretrained: ${data.tokenizer_path}
+
+  loss_weight_0: ~
+  loss_label_smoothing: 0.0
+
+  pointer_args:
+    paware_mode: "enable_post_mask"
+    pointer_loss_strength: 0.075
+    pointer_adapter_impl: 3
+    pointer_adapter_layernorm: false
+    pointer_adapter_last_linear_zero_init: true
+    pointer_adapter_residual: true
+
+optimizer:
+  groups:
+    - pattern: .*(bias|layernorm|shared|embed).*
+      weight_decay: 0
+  args:
+    _target_: torch.optim.AdamW
+    lr: 3.0e-5
+    betas: [0.9, 0.999]
+    weight_decay: 0.004
+
+scheduler:
+  interval: step
+  frequency: 1
+  monitor: val/loss
+  args:
+    _target_: src.utils.scheduler.get_cosine_schedule_with_warmup
+    num_warmup_steps: ${eval:${trainer.max_steps} * 0.1}
+    num_training_steps: 10000
+
+val_metric:
+  _target_: src.utils.metric.SmatchMetric
+
+test_metric:
+  _target_: src.utils.metric.SmatchMetric
+
+save_prediction_dir: ${paths.output_dir}
+
+test_gen_args:
+  num_beams: 4
+  beam_search_pointer_scale: 0.
+  pruning_token: 8
+  pruning_pointer: 2
+  consider_pointer_prob_in_topk: true
+  length_penalty: 1.
+
+load_from_checkpoint: ~

@@ -1,0 +1,28 @@
+defaults:
+  - maskrules: txl
+
+_target_: src.data.t2g_datamodule.Text2GraphDataModule
+
+data_root: ${paths.data_dir}/AMR2.0/bart-large
+feat_name: amrtoken # not used in py
+
+train_file: ${.feat_name}/train.tsv
+dev_file: ${.feat_name}/dev.tsv
+dev_graph_file: ${.feat_name}/dev.graph
+dev_url_patch: ~ #${.feat_name}/dev.url
+test_file: ${.feat_name}/test.tsv
+test_graph_file: ${.feat_name}/test.graph
+test_url_patch: ~ #${.feat_name}/test.url
+
+tokenizer_path: ${.data_root}/model
+
+max_src_len: 100
+max_tgt_len: 512
+batch_size: 16
+eval_batch_size: 16
+test_batch_size: 16
+use_grouped_sampler: false
+num_workers: 6
+pin_memory: false
+pad_to_multiple_of: 8
+var_format: indicator

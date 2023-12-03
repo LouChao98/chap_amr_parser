@@ -1,0 +1,4 @@
+name: stack_compose_double_closing_nt
+sequence_length: 1024
+memory_length: 1024
+use_stacking: true

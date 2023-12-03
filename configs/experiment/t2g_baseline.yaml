@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /data: amr3
+  - override /model: t2g_baseline
+  - override /callbacks: default
+  - override /trainer: gpu
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+task_name: amr3
+tags: ["normal"]
+
+seed: 12345
+
+logger:
+  wandb:
+    project: amr
+    tags: ${tags}

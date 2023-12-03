@@ -1,0 +1,56 @@
+_target_: src.models.t2g_model.Text2GraphLitModule
+_recursive_: false
+
+net:
+  _target_: src.models.core.t2g_inline_closing_only_pointer_paware.Text2GraphInline
+  model_name: bart_paware_adapter
+  path_to_pretrained: ${data.tokenizer_path}
+  tg_args:
+    tg_layers: all
+    tg_bypass_num_heads: 4
+    tg_bypass_proj_size: 512
+    tg_zero_init_up_proj: true
+  pointer_args:
+    pointer_loss_strength: 0.075
+
+  aligner:
+    type: bilinear
+    hidden_size: 128
+    bart_layers: 1
+    deeper: false
+
+optimizer:
+  groups:
+    - pattern: .*(bias|layernorm|shared|embed).*
+      weight_decay: 0
+  args:
+    _target_: torch.optim.AdamW
+    lr: 3.0e-5
+    betas: [0.9, 0.999]
+    weight_decay: 0.004
+
+scheduler:
+  interval: step
+  frequency: 1
+  monitor: val/loss
+  args:
+    _target_: src.utils.scheduler.get_cosine_schedule_with_warmup
+    num_warmup_steps: ${eval:${trainer.max_steps} * 0.1}
+    num_training_steps: 10000
+
+val_metric:
+  _target_: src.utils.metric.SmatchMetric
+
+test_metric:
+  _target_: src.utils.metric.SmatchMetric
+
+save_prediction_dir: ${paths.output_dir}
+
+test_gen_args:
+  num_beams: 4
+  beam_search_pointer_scale: 0.
+  pruning_token: 8
+  pruning_pointer: 2
+  consider_pointer_prob_in_topk: true
+
+load_from_checkpoint: ~

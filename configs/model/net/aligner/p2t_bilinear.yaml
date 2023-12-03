@@ -1,0 +1,5 @@
+type: bilinear
+hidden_size: 128
+bart_layers: 1
+var_format: ${data.var_format}
+deeper: false
