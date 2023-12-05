@@ -46,7 +46,7 @@ We use `hydra` to configure training and models. This project is based on the [l
 
 ## Evaluate
 
-In the training script, a prediction on the test set will be stored under the working directory. To evaluate on a trained model on other datasets, use the following command:
+In the training script, a prediction on the test set will be stored under the working directory. To evaluate a trained model on other datasets, use the following command:
 ```
 python src/eval.py experiment=<model config> data=<data config> ckpt_path=<ckpt path>
 ```
@@ -61,9 +61,9 @@ This code is released under the MIT license.
 If you use this work for research, please cite our paper:
 ```
 @inproceedings{
-anonymous2023amr,
+lou2023amr,
 title={{AMR} Parsing with Causal Hierarchical Attention and Pointers},
-author={Anonymous},
+author={Chao Lou and Kewei Tu},
 booktitle={The 2023 Conference on Empirical Methods in Natural Language Processing},
 year={2023},
 url={https://openreview.net/forum?id=SI2CXa5eok}
